@@ -26,13 +26,12 @@ def get_dominant_color(image_path: str) -> Tuple[Optional[Image.Image], Optional
         # 画像をRGBに変換
         if img.mode != 'RGB':
             img = img.convert('RGB')
-        
         # ピクセルデータを取得
-        pixels = list(img.getdata())
+        pixels = np.array(img.getdata())
         
         # 各ピクセルの彩度を計算して重み付け
         pixel_weights = {}  # ピクセルごとの重みを保存する辞書
-        for pixel in pixels:
+        for pixel in map(tuple, pixels):
             # RGBを0-1の範囲に正規化
             rgb_normalized = np.array(pixel) / 255.0
             
@@ -80,6 +79,8 @@ def sort_images_by_hue(image_folder: str) -> List[Dict[str, Any]]:
         if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
             image_path = os.path.join(image_folder, filename)
             image_files.append(image_path)
+
+    print(f"画像の枚数: {len(image_files)}")
     
     # 各画像の最頻色を取得
     image_data = []
@@ -187,21 +188,25 @@ def main() -> None:
     
     # 画像の配置を決定
     num_images = len(sorted_images)
-    num_cols = 5  # 横のグリッド数を5に固定
-    num_rows = (num_images + num_cols - 1) // num_cols  # 必要な行数を計算
+    # num_cols = 10
+    # num_rows = (num_images + num_cols - 1) // num_cols  # 必要な行数を計算
+    num_cols = 20
+    num_rows = 10
     
     # 新しい画像を作成
     combined_image = Image.new('RGB', (target_width * num_cols, target_height * num_rows))
     
     # 対角線状のグラデーション配置順序を生成
     positions = []
-    max_sum = num_rows + num_cols - 2  # 最大の座標和
-    
-    for sum_coords in range(max_sum + 1):
-        for x in range(max(0, sum_coords - num_rows + 1), min(num_cols, sum_coords + 1)):
-            y = sum_coords - x
-            if 0 <= y < num_rows:
-                positions.append((x, y))
+    for s in range(num_cols + num_rows + 1):
+        points = []
+        for x in range(s + 1):
+            y = s - x
+            if 0 <= x < num_cols and 0 <= y < num_rows:
+                points.append((x, y))
+        if s % 2 == 0:
+            points.reverse()
+        positions.extend(points)
     
     # 画像を配置
     for i, img_data in enumerate(sorted_images):
@@ -227,7 +232,7 @@ def main() -> None:
         resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
         
         # 画像の配置位置を計算（隙間をなくす）
-        row, col = positions[i]
+        col, row = positions[i]
         x = col * target_width
         y = row * target_height
         
@@ -240,14 +245,14 @@ def main() -> None:
     print(f"グリッドサイズ: {num_cols}列 × {num_rows}行")
     print(f"セルサイズ: {target_width} × {target_height}")
     print(f"元画像の代表的なアスペクト比: {aspect_ratio:.2f}")
-    
+
     # 各画像の情報を表示
-    print("\n色相順に並べられた画像:")
-    for i, img_data in enumerate(sorted_images):
-        filename = os.path.basename(img_data['path'])
-        hue_degrees = img_data['hue'] * 360  # 度に変換
-        color = img_data['dominant_color']
-        print(f"{i+1:2d}. {filename} - 色相: {hue_degrees:.1f}° - 最頻色: RGB{color}")
+    # print("\n色相順に並べられた画像:")
+    # for i, img_data in enumerate(sorted_images):
+    #     filename = os.path.basename(img_data['path'])
+    #     hue_degrees = img_data['hue'] * 360  # 度に変換
+    #     color = img_data['dominant_color']
+    #     print(f"{i+1:2d}. {filename} - 色相: {hue_degrees:.1f}° - 最頻色: RGB{color}")
 
 if __name__ == "__main__":
     main()
