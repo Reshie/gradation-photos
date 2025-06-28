@@ -3,7 +3,7 @@
 ## プロジェクト構成
 
 - **フロントエンド**: React + Vite (Node.js 20.x, ポート5173)
-- **バックエンド**: Python 3.12 + FastAPI + uv (ポート8000)
+- **バックエンド**: Python 3.12 + FastAPI (ポート8080)
 - **開発環境**: DevContainer (Docker)
 
 ## 開発環境のセットアップ
@@ -17,14 +17,14 @@
 ### 使用方法
 
 1. VSCodeでプロジェクトルートディレクトリを開く
-2. コマンドパレット(F1)を開く
+2. コマンドパレクト(F1)を開く
 3. 「Dev Containers: Reopen in Container」を選択
 
 ### アクセス方法
 
 - **フロントエンド**: http://localhost:5173
-- **バックエンド**: http://localhost:8000
-- **FastAPI Docs**: http://localhost:8000/docs
+- **バックエンド**: http://localhost:8080
+- **FastAPI Docs**: http://localhost:8080/docs
 
 ### 必要なファイル
 
@@ -35,6 +35,5 @@
 
 #### バックエンド
 
-- `pyproject.toml` - Python依存関係
-- `uv.lock` - 依存関係ロックファイル
+- `requirements.txt` - Python依存関係
 - `main.py` - FastAPIアプリケーション
