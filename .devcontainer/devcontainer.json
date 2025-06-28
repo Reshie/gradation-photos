@@ -1,7 +1,7 @@
 {
-  "name": "backend",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "backend",
+  "name": "app",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "app",
   "workspaceFolder": "/workspace",
   "customizations": {
       "vscode": {

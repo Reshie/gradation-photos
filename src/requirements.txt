@@ -1,0 +1,5 @@
+fastapi==0.115.14
+uvicorn==0.34.3
+numpy==1.26.4
+matplotlib==3.8.4
+Pillow==10.2.0
