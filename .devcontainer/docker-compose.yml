@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    volumes:
+      - ../backend:/workspace
+    command: sleep infinity
+  
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend:/workspace
+    command: sleep infinity
+    depends_on:
+      - backend
+
+  
+

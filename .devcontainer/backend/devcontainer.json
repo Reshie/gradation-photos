@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+      "vscode": {
+          "extensions": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "github.copilot"
+          ],
+          "settings": {
+            "python.linting.enabled": true,
+            "python.linting.lintOnSave": true,
+            "python.languageServer": "Pylance",
+            "python.analysis.completeFunctionParens": true
+          }
+      }
+  },
+  "forwardPorts": [8080]
+}
