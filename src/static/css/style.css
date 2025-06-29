@@ -1,11 +1,6 @@
-/* style.css (統合・修正版) */
-
 /* --- 1. フォントの読み込み --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap');
-
-
-/* --- 2. Tailwindから変換したスタイル --- */
 
 /* Global & Body */
 body {
@@ -25,27 +20,14 @@ body {
     margin-right: auto;
     padding: 1rem; /* p-4 */
 }
-/* sm (640px) and up */
-@media (min-width: 640px) {
-    .container {
-        max-width: 640px;
-        padding: 1.5rem; /* sm:p-6 */
-    }
-}
-/* lg (1024px) and up */
-@media (min-width: 1024px) {
-    .container {
-        max-width: 1024px;
-        padding: 2rem; /* lg:p-8 */
-    }
-}
+@media (min-width: 640px) { .container { max-width: 640px; padding: 1.5rem; } }
+@media (min-width: 1024px) { .container { max-width: 1024px; padding: 2rem; } }
 
 /* Header */
 header {
     text-align: center; /* text-center */
     margin-bottom: 1rem; /* mb-8 */
 }
-
 header h1 {
     font-size: 1.875rem; /* text-3xl */
     font-weight: 700; /* font-bold */
@@ -72,195 +54,198 @@ header p {
 
 /* Upload Box */
 .upload-box {
-    max-width: 36rem; /* max-w-xl */
+    max-width: 36rem;
     margin-left: auto;
     margin-right: auto;
-    background-color: #ffffff; /* bg-white */
-    border-radius: 0.75rem; /* rounded-xl */
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
-    padding: 1.5rem; /* p-6 */
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    padding: 1.5rem;
 }
-/* sm (640px) and up */
-@media (min-width: 640px) {
-    .upload-box {
-        padding: 2rem; /* sm:p-8 */
-    }
-}
-
+@media (min-width: 640px) { .upload-box { padding: 2rem; } }
 .upload-box h2 {
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.5rem;
     line-height: 2rem;
-    font-weight: 600; /* font-semibold */
-    margin-bottom: 1rem; /* mb-4 */
-    text-align: center; /* text-center */
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
 }
-
 .upload-area {
-    display: flex; /* flex */
-    flex-direction: column; /* flex-col */
-    align-items: center; /* items-center */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* File Input Label */
 label[for="imageInput"] {
-    width: 100%; /* w-full */
-    margin-bottom: 1rem; /* mb-4 */
-    padding: 1.5rem; /* p-6 */
-    border-width: 2px; /* border-2 */
-    border-style: dashed; /* border-dashed */
-    border-color: #d1d5db; /* border-gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
-    text-align: center; /* text-center */
-    cursor: pointer; /* cursor-pointer */
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #d1d5db;
+    border-radius: 0.5rem;
+    text-align: center;
+    cursor: pointer;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms; /* transition-colors */
+    transition-duration: 150ms;
+    position: relative;
 }
 
 label[for="imageInput"]:hover {
-    border-color: #3b82f6; /* hover:border-blue-500 */
-    background-color: #f9fafb; /* hover:bg-gray-50 */
+    border-color: #3b82f6;
+    background-color: #f9fafb;
+}
+
+label[for="imageInput"].dragging {
+    border-color: #3b82f6;
+    background-color: #f9fafb;
+}
+label[for="imageInput"].busy {
+    border-color: #ef4444; 
+    background-color: #fef2f2;
+    cursor: not-allowed;
 }
 
 label[for="imageInput"] svg {
     margin-left: auto;
     margin-right: auto;
-    height: 3rem; /* h-12 */
-    width: 3rem; /* w-12 */
-    color: #9ca3af; /* text-gray-400 */
+    height: 3rem;
+    width: 3rem;
+    color: #9ca3af;
 }
-
 #fileName {
-    margin-top: 0.5rem; /* mt-2 */
-    display: block; /* block */
-    font-size: 0.875rem; /* text-sm */
+    margin-top: 0.5rem;
+    display: block;
+    font-size: 0.875rem;
     line-height: 1.25rem;
-    font-weight: 500; /* font-medium */
-    color: #4b5563; /* text-gray-600 */
+    font-weight: 500;
+    color: #4b5563;
 }
-
 label[for="imageInput"] .file-type-info {
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.75rem;
     line-height: 1rem;
-    color: #6b7280; /* text-gray-500 */
+    color: #6b7280;
 }
-
 input[type="file"]#imageInput {
-    display: none; /* hidden */
+    display: none;
 }
 
 /* Upload Button */
 #uploadButton {
-    width: 100%; /* w-full */
-    background-color: #2563eb; /* bg-blue-600 */
-    color: #ffffff; /* text-white */
-    font-weight: 700; /* font-bold */
-    padding: 0.75rem 1rem; /* py-3 px-4 */
-    border-radius: 0.5rem; /* rounded-lg */
+    width: 100%;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
     border: none;
     cursor: pointer;
     transition-property: background-color, transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms; /* transition-transform */
+    transition-duration: 150ms;
 }
-
 #uploadButton:hover {
-    background-color: #1d4ed8; /* hover:bg-blue-700 */
-    transform: scale(1.05); /* hover:scale-105 */
+    background-color: #1d4ed8;
+    transform: scale(1.05);
 }
-
 #uploadButton:focus {
-    outline: 2px solid transparent; /* focus:outline-none */
+    outline: 2px solid transparent;
     outline-offset: 2px;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 */
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6;
 }
-
-/* ★★★ ここからが追加・修正したスタイルです ★★★ */
 #uploadButton:disabled {
-    /* 背景色を分かりやすい灰色に変更します */
     background-color: #cccccc;
-
-    /* hover時の拡大効果(scale)を無効にします */
     transform: none;
-
-    /* マウスカーソルを「操作不可」を示す形に変更します */
     cursor: not-allowed;
 }
-/* ★★★ ここまでが追加・修正したスタイルです ★★★ */
-
 
 /* Horizontal Rule */
 hr {
-    margin-top: 2.5rem; /* my-10 */
+    margin-top: 2.5rem;
     margin-bottom: 2.5rem;
     border: 0;
-    border-top: 1px solid #d1d5db; /* border-gray-300 */
+    border-top: 1px solid #d1d5db;
 }
 
 /* Gallery Section */
 #gallery-section h2 {
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.5rem;
     line-height: 2rem;
-    font-weight: 600; /* font-semibold */
-    margin-bottom: 1.5rem; /* mb-6 */
-    text-align: center; /* text-center */
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
-
 #gallery {
-    display: grid; /* grid */
-    grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
-    gap: 1.5rem; /* gap-6 */
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
 }
-
 #gallery-placeholder {
-    grid-column: 1 / -1; /* col-span-full */
-    text-align: center; /* text-center */
-    color: #6b7280; /* text-gray-500 */
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #6b7280;
 }
-
-
-/* --- 3. 元のCSSからの追加スタイル (Toast & Loader) --- */
 
 /* 通知メッセージ（トースト）のスタイル */
 .toast {
-    visibility: hidden; /* 初期状態では非表示 */
+    visibility: hidden;
     min-width: 250px;
-    background-color: #333; /* 背景色 */
-    color: #fff; /* 文字色 */
+    background-color: #333;
+    color: #fff;
     text-align: center;
-    border-radius: 8px; /* 角を丸くする */
-    padding: 16px; /* 内側の余白 */
-    position: fixed; /* 画面に固定 */
-    z-index: 10; /* 他の要素より手前に表示 */
-    left: 50%; /* 画面の左右中央へ */
-    transform: translateX(-50%); /* X軸方向の中央揃え */
-    bottom: 30px; /* 画面下からの距離 */
-    opacity: 0; /* 初期状態では透明 */
-    /* 透明度と表示状態が0.5秒かけて変化するアニメーション設定 */
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 20; /* ローダーより手前に表示 */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+    opacity: 0;
     transition: opacity 0.5s, visibility 0s 0.5s; 
 }
-
-/* トーストを表示するためのクラス */
 .toast.show {
-    visibility: visible; /* 表示状態にする */
-    opacity: 1; /* 不透明にする */
+    visibility: visible;
+    opacity: 1;
     transition: opacity 0.5s;
 }
 
-/* ローディングアニメーションのスタイル */
 .loader {
-    border: 5px solid #f3f3f3; /* 輪っかの薄い部分 */
-    border-top: 5px solid #3498db; /* 輪っかの濃い青の部分 */
-    border-radius: 50%; /* 正円にする */
+    /* 親要素(label)を基準に絶対配置する */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* 半透明の背景で下の要素を覆う */
+    background-color: rgba(255, 255, 255, 0.85);
+    
+    /* 輪っかを中央に配置するためのFlexbox設定 */
+    display: none; /* JSで 'flex' に切り替えて表示 */
+    align-items: center;
+    justify-content: center;
+
+    /* 表示の階層を調整 */
+    z-index: 10;
+    
+    /* 親要素の角丸に合わせる */
+    border-radius: 0.5rem;
+}
+
+/* 輪っか自体は疑似要素で描画する */
+.loader::after {
+    content: '';
+    display: block;
     width: 50px;
     height: 50px;
-    animation: spin 1s linear infinite; /* 'spin'アニメーションを1秒で無限に繰り返す */
-    position: fixed; /* 画面に固定 */
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%); /* 画面のど真ん中に配置 */
-    z-index: 20; /* 最も手前に表示 */
-    display: none; /* 初期状態では非表示 */
+    
+    border: 5px solid #f3f3f3; /* 輪っかの薄い部分 */
+    border-top-color: #3498db; /* 輪っかの濃い青の部分 */
+    border-radius: 50%; /* 正円にする */
+
+    animation: spin 1s linear infinite;
 }
 
 /* 'spin'アニメーションの定義（0度から360度まで回転させる） */
@@ -269,42 +254,23 @@ hr {
     100% { transform: rotate(360deg); }
 }
 
-/* style.css の末尾にこれを追加 */
-
 /* --- 4. 動的に生成されるギャラリーアイテムのスタイル --- */
 .gallery-item {
     background-color: #ffffff;
-    border-radius: 0.5rem; /* rounded-lg と同等 */
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md と同等 */
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     overflow: hidden;
 }
-
 .gallery-item img {
     width: 100%;
     height: auto;
     object-fit: contain;
-    display: block; /* 画像下の余分な余白を防ぐ */
+    display: block;
 }
-
-/* style.css の末尾に追加 */
 
 /* --- 5. 動くグラデーション背景のためのアニメーション定義 --- */
 @keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-/* ★★★ ドラッグ＆ドロップ中のスタイルを追加 ★★★ */
-
-/* JavaScriptで 'dragging' クラスが付与されたときのスタイル */
-label[for="imageInput"].dragging {
-    /* 既存のホバー（カーソルを乗せたとき）と同じスタイルを適用 */
-    border-color: #3b82f6; /* hover:border-blue-500 */
-    background-color: #f9fafb; /* hover:bg-gray-50 */
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
