@@ -94,7 +94,21 @@ def sort_images_by_hue(images: List[Image.Image]) -> List[Dict[str, Any]]:
     
     return image_data
 
-async def combine_images(files: List[UploadFile] = File(...)):
+def calc_grid_size(num_images: int, num_cols: int = 0, num_rows: int = 0) -> Tuple[int, int]:
+    """
+    画像の枚数を計算
+    """
+    if num_cols == 0 and num_rows == 0:
+        return 0, 0
+    
+    if num_cols == 0:
+        num_cols = (num_images + num_rows - 1) // num_rows
+    if num_rows == 0:
+        num_rows = (num_images + num_cols - 1) // num_cols
+    
+    return num_cols, num_rows
+
+async def combine_images(files: List[UploadFile] = File(...), num_cols: int = 0, num_rows: int = 0):
     """
     メイン処理
     """
@@ -148,12 +162,6 @@ async def combine_images(files: List[UploadFile] = File(...)):
         target_width = 250
         target_height = 250
     
-    # 画像の配置を決定
-    num_images = len(sorted_images)
-    # num_cols = 10
-    # num_rows = (num_images + num_cols - 1) // num_cols  # 必要な行数を計算
-    num_cols = 10
-    num_rows = 20
     
     # 新しい画像を作成
     combined_image = Image.new('RGB', (target_width * num_cols, target_height * num_rows))
@@ -170,11 +178,12 @@ async def combine_images(files: List[UploadFile] = File(...)):
             points.reverse()
         positions.extend(points)
     
-    # 画像を配置
-    for i, img_data in enumerate(sorted_images):
-        if i >= len(positions):
-            break
-            
+    # positionsの各位置に対して画像を配置
+    for pos_idx, pos in enumerate(positions):
+        # 画像インデックスを計算（循環させる）
+        img_idx = pos_idx % len(sorted_images)
+        img_data = sorted_images[img_idx]
+        
         img = img_data['image']
         
         # アスペクト比を保ってリサイズ（隙間をなくすため、セルサイズに合わせる）
@@ -194,7 +203,7 @@ async def combine_images(files: List[UploadFile] = File(...)):
         resized_img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
         
         # 画像の配置位置を計算（隙間をなくす）
-        col, row = positions[i]
+        col, row = pos
         x = col * target_width
         y = row * target_height
         
@@ -207,9 +216,9 @@ async def combine_images(files: List[UploadFile] = File(...)):
 
     # 画像を出力
     buffered = io.BytesIO()
-    combined_image.save(buffered, format="PNG")
+    combined_image.save(buffered, format="JPEG", quality=95)
 
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    data_url = f"data:image/png;base64,{img_str}"
+    data_url = f"data:image/jpeg;base64,{img_str}"
     
     return data_url
