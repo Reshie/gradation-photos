@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>画像結合・表示アプリ</title>
-
+    <title>フォトグラ</title>
+    <link rel="icon" type="image/png" href="/static/img/fav.png">
     <link rel="stylesheet" href="/static/css/style.css">
-
 </head>
 <body>
 
@@ -17,33 +16,49 @@
         <header>
             <h1>
                 <a href="/">
-                    <img src="/static/img/logo.png" alt="ロゴ" >
+                    <img src="/static/img/logo.png" alt="ロゴ">
                 </a>
-            <h1>
+            </h1>
             <p>複数の画像をグラデーションに配置します</p>
         </header>
 
         <div class="upload-box">
             <h2>画像をアップロード</h2>
             <div class="upload-area">
-                
                 <label for="imageInput">
                     <svg stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                     <span id="fileName">複数枚の画像を選択</span>
                     <span class="file-type-info">PNG, JPG, GIFなど</span>
                 </label>
-                
                 <input type="file" id="imageInput" accept="image/*" multiple>
-                
-                <button id="uploadButton">
-                    グラデーションに並べる
-                </button>
             </div>
-        </div>
-
-        <hr>
+            
+            <hr>
+            
+            <div class="size-inputs">
+                <div class="input-group">
+                    <label for="outputWidth">幅 (Width)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="outputWidth" placeholder="例: 10">
+                        <span>px</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="outputHeight">高さ (Height)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="outputHeight" placeholder="例: 10">
+                        <span>px</span>
+                    </div>
+                </div>
+            </div>
+            <p class="options-note">※空欄の場合、1枚目の画像のサイズに合わせます。</p>
+            
+            <button id="uploadButton">
+                グラデーションに並べる
+            </button>
+        </div><hr>
 
         <div id="gallery-section">
             <h2>生成された画像</h2>
@@ -52,10 +67,7 @@
                     <p>まだ画像が生成されていません。</p>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div id="toast" class="toast"></div>
+        </div></div><div id="toast" class="toast"></div>
 
     <script src="/static/js/script.js"></script>
 

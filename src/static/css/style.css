@@ -191,10 +191,9 @@ input[type="file"]#imageInput {
 
 /* Horizontal Rule */
 hr {
-    margin-top: 2.5rem; /* my-10 */
-    margin-bottom: 2.5rem;
+    margin: 1.5rem 0; /* 上下の余白を少し小さく調整 */
     border: 0;
-    border-top: 1px solid #d1d5db; /* border-gray-300 */
+    border-top: 1px solid #e5e7eb; /* 少し薄いグレーに変更 */
 }
 
 /* Gallery Section */
@@ -307,4 +306,87 @@ label[for="imageInput"].dragging {
     /* 既存のホバー（カーソルを乗せたとき）と同じスタイルを適用 */
     border-color: #3b82f6; /* hover:border-blue-500 */
     background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+/* --- 6. サイズ指定（upload-box内）のスタイル --- */
+
+/* 「出力サイズを指定」の見出しスタイル */
+.upload-box h3 {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* 幅と高さの入力欄を横並びにするためのコンテナ */
+.size-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem; /* 入力欄の間の隙間 */
+}
+
+/* ラベルと入力欄のグループ */
+.input-group {
+    flex: 1; /* 横並びのスペースを均等に分ける */
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #374151; /* text-gray-700 */
+}
+
+/* 入力欄と "px" をまとめるラッパー */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    border-radius: 0.375rem; /* rounded-md */
+    transition: border-color 150ms, box-shadow 150ms;
+}
+
+.input-wrapper:focus-within {
+    border-color: #3b82f6; /* focus:border-blue-500 */
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* 数値入力欄のスタイル */
+.input-wrapper input[type="number"] {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0.5rem 0.75rem;
+    background-color: transparent;
+    font-size: 1rem;
+}
+
+/* "px" のテキストスタイル */
+.input-wrapper span {
+    padding-right: 0.75rem;
+    color: #6b7280; /* text-gray-500 */
+    font-size: 0.875rem;
+}
+
+/* 注釈テキストのスタイル */
+.options-note {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280; /* text-gray-500 */
+}
+
+/* --- 7. 数値入力欄の矢印（スピンボタン）を非表示にする --- */
+
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
 }
