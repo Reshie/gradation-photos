@@ -57,6 +57,22 @@ async def process_images(files: List[UploadFile] = File(...), num_cols: int = 0,
 
     return {"status": "success", "image_data": data_url}
 
+@app.post("/get-rows/")
+async def get_rows(num_images:int, num_cols: int = 1):
+    try:
+        num_rows = calc_grid_size(num_images=num_images,num_cols=num_cols)[1]
+    except Exception as e:
+        print(e)
+
+    return num_rows
+
+@app.post("/get-cols/")
+async def get_cols(num_images:int, num_rows: int = 1):
+
+    num_cols = calc_grid_size(num_images=num_images,num_rows=num_rows)[0]
+
+    return num_cols
+
 # このスクリプトが直接実行された場合にUvicornサーバーを起動
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

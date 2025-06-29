@@ -8,9 +8,9 @@ const fileNameSpan = document.getElementById('fileName');
 const galleryPlaceholder = document.getElementById('gallery-placeholder');
 const toast = document.getElementById('toast');
 const loader = document.getElementById('loader');
-// ★★★ ドラッグ＆ドロップの対象となるエリア（<label>要素）を取得 ★★★
 const uploadArea = document.querySelector('label[for="imageInput"]');
-
+const outputWidth = document.getElementById('outputWidth');
+const outputHeight = document.getElementById('outputHeight');
 
 // --- 初期設定 ---
 uploadButton.disabled = true;
@@ -129,3 +129,17 @@ function showToast(message) {
         toast.className = toast.className.replace("show", "");
     }, 3000);
 }
+
+
+outputWidth.addEventListener('input', async() => {
+    try {
+        const numFiles = Number(imageInput.files.length);
+        const formData = new FormData();
+        formData.append("num_images", numFiles);
+        formData.append("num_cols", Number(outputWidth.textContent));
+        const response = await fetch('/get-rows/', { method: 'POST', body: formData});
+        outputHeight.textContent=response;
+    } catch (e) {
+        console.log(e);
+    }
+});
