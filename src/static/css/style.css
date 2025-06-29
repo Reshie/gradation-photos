@@ -1,17 +1,14 @@
-/* style.css (ローダー位置修正版) */
-
 /* --- 1. フォントの読み込み --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
-
-
-/* --- 2. Tailwindから変換したスタイル --- */
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap');
 
 /* Global & Body */
 body {
     color: #1f2937; /* text-gray-800 */
-    font-family: 'Inter', 'Noto Sans JP', sans-serif;
-    background: linear-gradient(-45deg, #faf2b3, #f5b3cd, #bfe7f6, #a8e8d9);
+    font-family:"Sawarabi Gothic", 'Inter', sans-serif;
+
+    /* ▼▼▼ 動くグラデーションのために追加 ▼▼▼ */
+    background: linear-gradient(-45deg, #f6f3db, #f6dee8, #daedf5, #d4efe0);
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite;
 }
@@ -28,19 +25,31 @@ body {
 
 /* Header */
 header {
-    text-align: center;
-    margin-bottom: 2rem;
+    text-align: center; /* text-center */
+    margin-bottom: 1rem; /* mb-8 */
 }
 header h1 {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-    font-weight: 700;
-    color: #111827;
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: #111827; /* text-gray-900 */
 }
-@media (min-width: 640px) { header h1 { font-size: 2.25rem; line-height: 2.5rem; } }
+/* sm (640px) and up */
+@media (min-width: 640px) {
+    header h1 {
+        font-size: 2.25rem; /* sm:text-4xl */
+        line-height: 2rem;
+    }
+}
+header h1 img {
+  width: 230px; /* お好みの幅に調整してください */
+  height: auto;   /* 高さは自動調整にして、画像の縦横比を保ちます */
+}
+
 header p {
-    margin-top: 0.5rem;
-    color: #4b5563;
+    margin-top: 0.5rem; /* mt-2 */
+    color: #4b5563; /* text-gray-600 */
+    font-size: 20px; /* ← この行を追記 (14pxに相当) */
+    line-height: 1.25rem; /* ← 行の高さを指定すると読みやすくなります */
 }
 
 /* Upload Box */
@@ -81,7 +90,6 @@ label[for="imageInput"] {
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
-    /* ★★★ ローダーを内部に配置するための基準点として設定 ★★★ */
     position: relative;
 }
 
@@ -90,7 +98,6 @@ label[for="imageInput"]:hover {
     background-color: #f9fafb;
 }
 
-/* ★★★ ドラッグ関連のスタイル（前回追加分） ★★★ */
 label[for="imageInput"].dragging {
     border-color: #3b82f6;
     background-color: #f9fafb;
@@ -100,8 +107,6 @@ label[for="imageInput"].busy {
     background-color: #fef2f2;
     cursor: not-allowed;
 }
-/* ★★★ ここまで ★★★ */
-
 
 label[for="imageInput"] svg {
     margin-left: auto;
@@ -126,7 +131,6 @@ label[for="imageInput"] .file-type-info {
 input[type="file"]#imageInput {
     display: none;
 }
-
 
 /* Upload Button */
 #uploadButton {
@@ -184,8 +188,6 @@ hr {
     color: #6b7280;
 }
 
-/* --- 3. 元のCSSからの追加スタイル (Toast & Loader) --- */
-
 /* 通知メッセージ（トースト）のスタイル */
 .toast {
     visibility: hidden;
@@ -209,7 +211,6 @@ hr {
     transition: opacity 0.5s;
 }
 
-/* ★★★ ローディングアニメーションのスタイルを全面的に修正 ★★★ */
 .loader {
     /* 親要素(label)を基準に絶対配置する */
     position: absolute;
