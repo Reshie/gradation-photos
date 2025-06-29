@@ -170,6 +170,19 @@ input[type="file"]#imageInput {
     box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 */
 }
 
+/* ★★★ ここからが追加・修正したスタイルです ★★★ */
+#uploadButton:disabled {
+    /* 背景色を分かりやすい灰色に変更します */
+    background-color: #cccccc;
+
+    /* hover時の拡大効果(scale)を無効にします */
+    transform: none;
+
+    /* マウスカーソルを「操作不可」を示す形に変更します */
+    cursor: not-allowed;
+}
+/* ★★★ ここまでが追加・修正したスタイルです ★★★ */
+
 
 /* Horizontal Rule */
 hr {
