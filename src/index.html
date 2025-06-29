@@ -4,205 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>画像結合・表示アプリ</title>
-    <!-- Tailwind CSSを読み込み -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* フォント設定 */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-        }
-        /* カスタムスタイル */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 10;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            opacity: 0;
-            transition: opacity 0.5s, visibility 0s 0.5s;
-        }
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            transition: opacity 0.5s;
-        }
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 20;
-            display: none; /* 初期状態では非表示 */
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body class="bg-gray-100 text-gray-800">
 
-    <!-- 処理中のローディングインジケーター -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
     <div id="loader" class="loader"></div>
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="container">
         
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">画像結合・表示アプリ</h1>
-            <p class="mt-2 text-gray-600">複数の画像をアップロードすると、横に連結された一つの画像が生成されます。</p>
+        <header>
+            <h1>Gradation Photos</h1>
+            <p>複数の画像のイメージカラーをグラデーションに配置します</p>
         </header>
 
-        <div class="max-w-xl mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8">
-            <h2 class="text-2xl font-semibold mb-4 text-center">画像をアップロード</h2>
-            <div class="flex flex-col items-center">
-                <!-- ファイル選択エリア。クリックするとファイルダイアログが開く -->
-                <label for="imageInput" class="w-full mb-4 p-6 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer hover:border-blue-500 hover:bg-gray-50 transition-colors">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+        <div class="upload-box">
+            <h2>画像をアップロード</h2>
+            <div class="upload-area">
+                
+                <label for="imageInput">
+                    <svg stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
-                    <span id="fileName" class="mt-2 block text-sm font-medium text-gray-600">クリックしてファイルを選択 (複数可)</span>
-                    <span class="text-xs text-gray-500">PNG, JPG, GIFなど</span>
+                    <span id="fileName">クリックしてファイルを選択 (複数可)</span>
+                    <span class="file-type-info">PNG, JPG, GIFなど</span>
                 </label>
-                <!-- 実際のファイル入力要素（非表示） -->
-                <input type="file" id="imageInput" class="hidden" accept="image/*" multiple>
                 
-                <!-- 処理実行ボタン -->
-                <button id="uploadButton" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-transform transform hover:scale-105">
-                    結合して生成
+                <input type="file" id="imageInput" accept="image/*" multiple>
+                
+                <button id="uploadButton">
+                    グラデーションに並べる
                 </button>
             </div>
         </div>
 
-        <hr class="my-10 border-gray-300">
+        <hr>
 
-        <!-- 生成された画像が表示されるセクション -->
         <div id="gallery-section">
-            <h2 class="text-2xl font-semibold mb-6 text-center">生成された画像</h2>
-            <div id="gallery" class="grid grid-cols-1 gap-6">
-                <div id="gallery-placeholder" class="col-span-full text-center text-gray-500">
+            <h2>生成された画像</h2>
+            <div id="gallery">
+                <div id="gallery-placeholder">
                     <p>まだ画像が生成されていません。</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 操作結果を通知するポップアップ（トースト） -->
     <div id="toast" class="toast"></div>
 
-    <script>
-        // --- HTML要素の取得 ---
-        const imageInput = document.getElementById('imageInput');
-        const uploadButton = document.getElementById('uploadButton');
-        const gallery = document.getElementById('gallery');
-        const fileNameSpan = document.getElementById('fileName');
-        const galleryPlaceholder = document.getElementById('gallery-placeholder');
-        const toast = document.getElementById('toast');
-        const loader = document.getElementById('loader');
-
-        // --- イベントリスナーの設定 ---
-
-        // ファイルが選択されたら、選択されたファイル数を表示
-        imageInput.addEventListener('change', () => {
-            const numFiles = imageInput.files.length;
-            if (numFiles > 0) {
-                fileNameSpan.textContent = `${numFiles} 個のファイルが選択されました`;
-            } else {
-                fileNameSpan.textContent = 'クリックしてファイルを選択 (複数可)';
-            }
-        });
-        
-        // 「結合して生成」ボタンがクリックされたときの処理
-        uploadButton.addEventListener('click', async () => {
-            const files = imageInput.files;
-
-            // ファイルが選択されているかチェック
-            if (files.length < 2) {
-                showToast('画像を結合するには2つ以上のファイルを選択してください。');
-                return;
-            }
-
-            // FormDataオブジェクトを作成し、選択されたファイルをすべて追加
-            const formData = new FormData();
-            for (const file of files) {
-                formData.append("files", file);
-            }
-
-            loader.style.display = 'block'; // ローディング表示開始
-
-            try {
-                // Fetch APIを使って、サーバーに画像を送信
-                const response = await fetch('/process-images/', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`サーバーエラー: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                // サーバーからの応答を処理
-                if (result.status === "success") {
-                    addProcessedImageToGallery(result.image_data);
-                    if (galleryPlaceholder) {
-                        galleryPlaceholder.style.display = 'none';
-                    }
-                    imageInput.value = ''; // ファイル選択をリセット
-                    fileNameSpan.textContent = 'クリックしてファイルを選択 (複数可)';
-                    showToast('画像の結合に成功しました！');
-                } else {
-                    throw new Error(result.detail || '画像の処理に失敗しました。');
-                }
-
-            } catch (error) {
-                console.error("Error:", error);
-                showToast(`エラーが発生しました: ${error.message}`);
-            } finally {
-                loader.style.display = 'none'; // ローディング表示終了
-            }
-        });
-
-        // --- UIを操作する関数 ---
-
-        // 生成された画像をギャラリーに追加する関数
-        function addProcessedImageToGallery(imageDataUrl) {
-            const imageContainer = document.createElement('div');
-            imageContainer.className = 'bg-white rounded-lg shadow-md overflow-hidden';
-            
-            const img = document.createElement('img');
-            img.src = imageDataUrl;
-            img.alt = '結合された画像';
-            img.className = 'w-full h-auto object-contain'; // アスペクト比を保つ
-
-            imageContainer.appendChild(img);
-            // 新しい画像をギャラリーの先頭に追加
-            gallery.prepend(imageContainer);
-        }
-
-        // 通知トーストを表示する関数
-        function showToast(message) {
-            toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(() => {
-                toast.className = toast.className.replace("show", "");
-            }, 3000); // 3秒後に自動で消える
-        }
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>

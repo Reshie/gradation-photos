@@ -1,0 +1,284 @@
+/* style.css (統合・修正版) */
+
+/* --- 1. フォントの読み込み --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+
+/* --- 2. Tailwindから変換したスタイル --- */
+
+/* Global & Body */
+body {
+    color: #1f2937; /* text-gray-800 */
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+
+    /* ▼▼▼ 動くグラデーションのために追加 ▼▼▼ */
+    background: linear-gradient(-45deg, #faf2b3, #f5b3cd, #bfe7f6, #a8e8d9);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem; /* p-4 */
+}
+/* sm (640px) and up */
+@media (min-width: 640px) {
+    .container {
+        max-width: 640px;
+        padding: 1.5rem; /* sm:p-6 */
+    }
+}
+/* lg (1024px) and up */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px;
+        padding: 2rem; /* lg:p-8 */
+    }
+}
+
+/* Header */
+header {
+    text-align: center; /* text-center */
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+header h1 {
+    font-size: 1.875rem; /* text-3xl */
+    line-height: 2.25rem;
+    font-weight: 700; /* font-bold */
+    color: #111827; /* text-gray-900 */
+}
+/* sm (640px) and up */
+@media (min-width: 640px) {
+    header h1 {
+        font-size: 2.25rem; /* sm:text-4xl */
+        line-height: 2.5rem;
+    }
+}
+
+header p {
+    margin-top: 0.5rem; /* mt-2 */
+    color: #4b5563; /* text-gray-600 */
+}
+
+/* Upload Box */
+.upload-box {
+    max-width: 36rem; /* max-w-xl */
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff; /* bg-white */
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
+    padding: 1.5rem; /* p-6 */
+}
+/* sm (640px) and up */
+@media (min-width: 640px) {
+    .upload-box {
+        padding: 2rem; /* sm:p-8 */
+    }
+}
+
+.upload-box h2 {
+    font-size: 1.5rem; /* text-2xl */
+    line-height: 2rem;
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 1rem; /* mb-4 */
+    text-align: center; /* text-center */
+}
+
+.upload-area {
+    display: flex; /* flex */
+    flex-direction: column; /* flex-col */
+    align-items: center; /* items-center */
+}
+
+/* File Input Label */
+label[for="imageInput"] {
+    width: 100%; /* w-full */
+    margin-bottom: 1rem; /* mb-4 */
+    padding: 1.5rem; /* p-6 */
+    border-width: 2px; /* border-2 */
+    border-style: dashed; /* border-dashed */
+    border-color: #d1d5db; /* border-gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    text-align: center; /* text-center */
+    cursor: pointer; /* cursor-pointer */
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms; /* transition-colors */
+}
+
+label[for="imageInput"]:hover {
+    border-color: #3b82f6; /* hover:border-blue-500 */
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+label[for="imageInput"] svg {
+    margin-left: auto;
+    margin-right: auto;
+    height: 3rem; /* h-12 */
+    width: 3rem; /* w-12 */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+#fileName {
+    margin-top: 0.5rem; /* mt-2 */
+    display: block; /* block */
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.25rem;
+    font-weight: 500; /* font-medium */
+    color: #4b5563; /* text-gray-600 */
+}
+
+label[for="imageInput"] .file-type-info {
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1rem;
+    color: #6b7280; /* text-gray-500 */
+}
+
+input[type="file"]#imageInput {
+    display: none; /* hidden */
+}
+
+/* Upload Button */
+#uploadButton {
+    width: 100%; /* w-full */
+    background-color: #2563eb; /* bg-blue-600 */
+    color: #ffffff; /* text-white */
+    font-weight: 700; /* font-bold */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    border: none;
+    cursor: pointer;
+    transition-property: background-color, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms; /* transition-transform */
+}
+
+#uploadButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+    transform: scale(1.05); /* hover:scale-105 */
+}
+
+#uploadButton:focus {
+    outline: 2px solid transparent; /* focus:outline-none */
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 */
+}
+
+
+/* Horizontal Rule */
+hr {
+    margin-top: 2.5rem; /* my-10 */
+    margin-bottom: 2.5rem;
+    border: 0;
+    border-top: 1px solid #d1d5db; /* border-gray-300 */
+}
+
+/* Gallery Section */
+#gallery-section h2 {
+    font-size: 1.5rem; /* text-2xl */
+    line-height: 2rem;
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 1.5rem; /* mb-6 */
+    text-align: center; /* text-center */
+}
+
+#gallery {
+    display: grid; /* grid */
+    grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+    gap: 1.5rem; /* gap-6 */
+}
+
+#gallery-placeholder {
+    grid-column: 1 / -1; /* col-span-full */
+    text-align: center; /* text-center */
+    color: #6b7280; /* text-gray-500 */
+}
+
+
+/* --- 3. 元のCSSからの追加スタイル (Toast & Loader) --- */
+
+/* 通知メッセージ（トースト）のスタイル */
+.toast {
+    visibility: hidden; /* 初期状態では非表示 */
+    min-width: 250px;
+    background-color: #333; /* 背景色 */
+    color: #fff; /* 文字色 */
+    text-align: center;
+    border-radius: 8px; /* 角を丸くする */
+    padding: 16px; /* 内側の余白 */
+    position: fixed; /* 画面に固定 */
+    z-index: 10; /* 他の要素より手前に表示 */
+    left: 50%; /* 画面の左右中央へ */
+    transform: translateX(-50%); /* X軸方向の中央揃え */
+    bottom: 30px; /* 画面下からの距離 */
+    opacity: 0; /* 初期状態では透明 */
+    /* 透明度と表示状態が0.5秒かけて変化するアニメーション設定 */
+    transition: opacity 0.5s, visibility 0s 0.5s; 
+}
+
+/* トーストを表示するためのクラス */
+.toast.show {
+    visibility: visible; /* 表示状態にする */
+    opacity: 1; /* 不透明にする */
+    transition: opacity 0.5s;
+}
+
+/* ローディングアニメーションのスタイル */
+.loader {
+    border: 5px solid #f3f3f3; /* 輪っかの薄い部分 */
+    border-top: 5px solid #3498db; /* 輪っかの濃い青の部分 */
+    border-radius: 50%; /* 正円にする */
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite; /* 'spin'アニメーションを1秒で無限に繰り返す */
+    position: fixed; /* 画面に固定 */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* 画面のど真ん中に配置 */
+    z-index: 20; /* 最も手前に表示 */
+    display: none; /* 初期状態では非表示 */
+}
+
+/* 'spin'アニメーションの定義（0度から360度まで回転させる） */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* style.css の末尾にこれを追加 */
+
+/* --- 4. 動的に生成されるギャラリーアイテムのスタイル --- */
+.gallery-item {
+    background-color: #ffffff;
+    border-radius: 0.5rem; /* rounded-lg と同等 */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md と同等 */
+    overflow: hidden;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block; /* 画像下の余分な余白を防ぐ */
+}
+
+/* style.css の末尾に追加 */
+
+/* --- 5. 動くグラデーション背景のためのアニメーション定義 --- */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
