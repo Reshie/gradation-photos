@@ -2,7 +2,7 @@
 
 /* --- 1. フォントの読み込み --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap');
 
 
 /* --- 2. Tailwindから変換したスタイル --- */
@@ -10,10 +10,10 @@
 /* Global & Body */
 body {
     color: #1f2937; /* text-gray-800 */
-    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    font-family:"Sawarabi Gothic", 'Inter', sans-serif;
 
     /* ▼▼▼ 動くグラデーションのために追加 ▼▼▼ */
-    background: linear-gradient(-45deg, #faf2b3, #f5b3cd, #bfe7f6, #a8e8d9);
+    background: linear-gradient(-45deg, #f6f3db, #f6dee8, #daedf5, #d4efe0);
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite;
 }
@@ -43,12 +43,11 @@ body {
 /* Header */
 header {
     text-align: center; /* text-center */
-    margin-bottom: 2rem; /* mb-8 */
+    margin-bottom: 1rem; /* mb-8 */
 }
 
 header h1 {
     font-size: 1.875rem; /* text-3xl */
-    line-height: 2.25rem;
     font-weight: 700; /* font-bold */
     color: #111827; /* text-gray-900 */
 }
@@ -56,13 +55,19 @@ header h1 {
 @media (min-width: 640px) {
     header h1 {
         font-size: 2.25rem; /* sm:text-4xl */
-        line-height: 2.5rem;
+        line-height: 2rem;
     }
+}
+header h1 img {
+  width: 230px; /* お好みの幅に調整してください */
+  height: auto;   /* 高さは自動調整にして、画像の縦横比を保ちます */
 }
 
 header p {
     margin-top: 0.5rem; /* mt-2 */
     color: #4b5563; /* text-gray-600 */
+    font-size: 20px; /* ← この行を追記 (14pxに相当) */
+    line-height: 1.25rem; /* ← 行の高さを指定すると読みやすくなります */
 }
 
 /* Upload Box */
