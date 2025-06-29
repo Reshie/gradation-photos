@@ -10,6 +10,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 
+from utils.process import combine_images
+
 # FastAPIアプリケーションの初期化
 app = FastAPI()
 
@@ -43,50 +45,7 @@ async def process_images(files: List[UploadFile] = File(...)):
             content={"status": "error", "detail": "最低2つの画像をアップロードしてください。"}
         )
 
-    images = []
-    try:
-        for file in files:
-            # アップロードされたファイルをメモリ上で読み込む
-            contents = await file.read()
-            # Pillowを使って画像を開く
-            image = Image.open(io.BytesIO(contents))
-
-            # PNGなどの透過画像(RGBA)をRGBに変換して、結合エラーを防ぐ
-            if image.mode == 'RGBA':
-                image = image.convert('RGB')
-                
-            images.append(image)
-    except Exception as e:
-        return JSONResponse(
-            status_code=400,
-            content={"status": "error", "detail": f"無効な画像ファイルが含まれています: {e}"}
-        )
-
-    # --- 画像を水平に結合する処理 ---
-    # 各画像のサイズを取得
-    widths, heights = zip(*(i.size for i in images))
-
-    # 結合後の画像の全体の幅と最大の高さを計算
-    total_width = sum(widths)
-    max_height = max(heights)
-
-    # 結合後の新しい画像を生成 (背景は白)
-    combined_image = Image.new('RGB', (total_width, max_height), 255)
-
-    # 順番に画像を貼り付け
-    x_offset = 0
-    for img in images:
-        combined_image.paste(img, (x_offset, 0))
-        x_offset += img.width
-    # --- ここまでが結合処理 ---
-
-    # 結合した画像をメモリ上のバッファにPNG形式で保存
-    buffered = io.BytesIO()
-    combined_image.save(buffered, format="PNG")
-    
-    # Base64エンコードして、HTMLで表示できるデータURL形式に変換
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    data_url = f"data:image/png;base64,{img_str}"
+    data_url = await combine_images(files)
 
     return {"status": "success", "image_data": data_url}
 
