@@ -152,8 +152,8 @@ async def combine_images(files: List[UploadFile] = File(...)):
     num_images = len(sorted_images)
     # num_cols = 10
     # num_rows = (num_images + num_cols - 1) // num_cols  # 必要な行数を計算
-    num_cols = 10
-    num_rows = 20
+    num_cols = 20
+    num_rows = 10
     
     # 新しい画像を作成
     combined_image = Image.new('RGB', (target_width * num_cols, target_height * num_rows))
@@ -207,9 +207,9 @@ async def combine_images(files: List[UploadFile] = File(...)):
 
     # 画像を出力
     buffered = io.BytesIO()
-    combined_image.save(buffered, format="PNG")
+    combined_image.save(buffered, format="JPEG", quality=95)
 
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    data_url = f"data:image/png;base64,{img_str}"
+    data_url = f"data:image/jpeg;base64,{img_str}"
     
     return data_url
