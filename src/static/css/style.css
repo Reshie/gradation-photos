@@ -295,3 +295,11 @@ hr {
     background-position: 0% 50%;
   }
 }
+/* ★★★ ドラッグ＆ドロップ中のスタイルを追加 ★★★ */
+
+/* JavaScriptで 'dragging' クラスが付与されたときのスタイル */
+label[for="imageInput"].dragging {
+    /* 既存のホバー（カーソルを乗せたとき）と同じスタイルを適用 */
+    border-color: #3b82f6; /* hover:border-blue-500 */
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
