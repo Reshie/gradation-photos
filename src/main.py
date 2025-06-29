@@ -4,8 +4,10 @@ import os
 from typing import List
 
 import uvicorn
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi import FastAPI, File, UploadFile, Request
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from PIL import Image
 
 # FastAPIアプリケーションの初期化
@@ -13,16 +15,20 @@ app = FastAPI()
 
 # このスクリプトがあるディレクトリを基準に、HTMLファイルのパスを決定
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-HTML_FILE_PATH = os.path.join(BASE_DIR, "index.html")
+HTML_FILE_PATH = os.path.join(BASE_DIR, "templates/index.html")
 
-@app.get("/")
-async def get_root():
+# 静的ファイルの設定
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def get_root(request: Request):
     """
     ルートURLにアクセスがあった場合に、index.htmlを返します。
     これにより、ユーザーはWebページを閲覧できます。
     """
     if os.path.exists(HTML_FILE_PATH):
-        return FileResponse(HTML_FILE_PATH)
+        templates = Jinja2Templates(directory="./templates")
+        return templates.TemplateResponse("index.html", {"request": request})
     return JSONResponse(status_code=404, content={"error": "index.html not found"})
 
 @app.post("/process-images/")
@@ -65,7 +71,7 @@ async def process_images(files: List[UploadFile] = File(...)):
     max_height = max(heights)
 
     # 結合後の新しい画像を生成 (背景は白)
-    combined_image = Image.new('RGB', (total_width, max_height), (255, 255, 255))
+    combined_image = Image.new('RGB', (total_width, max_height), 255)
 
     # 順番に画像を貼り付け
     x_offset = 0
