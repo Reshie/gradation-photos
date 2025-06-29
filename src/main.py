@@ -1,5 +1,3 @@
-import io
-import base64
 import os
 from typing import List
 
@@ -8,7 +6,6 @@ from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from PIL import Image
 
 from utils.process import combine_images
 
