@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from utils.process import combine_images
+from utils.process import calc_grid_size, combine_images
 
 # FastAPIアプリケーションの初期化
 app = FastAPI()
@@ -31,7 +31,7 @@ async def get_root(request: Request):
     return JSONResponse(status_code=404, content={"error": "index.html not found"})
 
 @app.post("/process-images/")
-async def process_images(files: List[UploadFile] = File(...)):
+async def process_images(files: List[UploadFile] = File(...), num_cols: int = 0, num_rows: int = 10):
     """
     複数の画像ファイルを受け取り、それらを水平に結合して
     単一の画像として返すAPIエンドポイント。
@@ -42,7 +42,18 @@ async def process_images(files: List[UploadFile] = File(...)):
             content={"status": "error", "detail": "最低2つの画像をアップロードしてください。"}
         )
 
-    data_url = await combine_images(files)
+    # グリッドサイズを一応計算
+    if num_cols == 0 and num_rows == 0:
+        return JSONResponse(
+            status_code=400,
+            content={"status": "error", "detail": "サイズを指定してください。"}
+        )
+    if num_cols == 0:
+        num_cols = calc_grid_size(len(files), num_rows=num_rows)[0]
+    if num_rows == 0:
+        num_rows = calc_grid_size(len(files), num_cols=num_cols)[1]
+
+    data_url = await combine_images(files, num_cols, num_rows)
 
     return {"status": "success", "image_data": data_url}
 
