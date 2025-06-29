@@ -1,20 +1,22 @@
-from PIL import Image
-import numpy as np
-import statistics
-import math
+import base64
+import io
 import os
+import math
+import statistics
 from collections import Counter
-import matplotlib.pyplot as plt
-from matplotlib.colors import rgb_to_hsv
 from typing import Tuple, Optional, List, Dict, Any
+import numpy as np
+from matplotlib.colors import rgb_to_hsv
+from fastapi import File, HTTPException, UploadFile
+from PIL import Image
 
-def get_dominant_color(image_path: str) -> Tuple[Optional[Image.Image], Optional[Tuple[int, int, int]]]:
+def get_dominant_color(image: Image.Image) -> Tuple[Optional[Image.Image], Optional[Tuple[int, int, int]]]:
     """
     画像から最頻色（最頻値）を抽出する（彩度が高い画素に重み付け、グレースケールは除外）
     """
     try:
         # 画像を読み込み
-        img = Image.open(image_path)
+        img = image
         
         # 画像をリサイズして処理を高速化
         if img.size[0] > 100 or img.size[1] > 100:
@@ -65,33 +67,23 @@ def get_dominant_color(image_path: str) -> Tuple[Optional[Image.Image], Optional
         return img, dominant_color
         
     except Exception as e:
-        print(f"画像 {image_path} の処理中にエラーが発生しました: {e}")
         return None, None
 
-def sort_images_by_hue(image_folder: str) -> List[Dict[str, Any]]:
+def sort_images_by_hue(images: List[Image.Image]) -> List[Dict[str, Any]]:
     """
     imagesフォルダ内の画像を色相順に並べる
     """
-    image_files = []
-    
-    # imagesフォルダ内の画像ファイルを取得
-    for filename in os.listdir(image_folder):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
-            image_path = os.path.join(image_folder, filename)
-            image_files.append(image_path)
-
-    print(f"画像の枚数: {len(image_files)}")
     
     # 各画像の最頻色を取得
     image_data = []
-    for image_path in image_files:
-        img, dominant_color = get_dominant_color(image_path)
+    for image in images:
+        img, dominant_color = get_dominant_color(image)
         if img is not None and dominant_color is not None:
             # RGBからHSVに変換して色相を取得
             hsv_color = rgb_to_hsv(np.array(dominant_color) / 255.0)
             hue = hsv_color[0]  # 色相（0-1の範囲）
             image_data.append({
-                'path': image_path,
+                'path': image,
                 'image': img,
                 'dominant_color': dominant_color,
                 'hue': hue
@@ -102,58 +94,28 @@ def sort_images_by_hue(image_folder: str) -> List[Dict[str, Any]]:
     
     return image_data
 
-def create_combined_image(sorted_images: List[Dict[str, Any]], output_path: str = 'combined_images.jpg') -> Optional[Image.Image]:
-    """
-    ソートされた画像を横方向につなげて1枚の画像を作成
-    """
-    if not sorted_images:
-        print("画像が見つかりませんでした。")
-        return None
-    
-    # すべての画像を同じ高さにリサイズ
-    target_height = 200
-    resized_images = []
-    
-    for img_data in sorted_images:
-        img = img_data['image']
-        width, height = img.size
-        
-        # アスペクト比を保ってリサイズ
-        aspect_ratio = width / height
-        new_width = int(target_height * aspect_ratio)
-        resized_img = img.resize((new_width, target_height), Image.Resampling.LANCZOS)
-        resized_images.append(resized_img)
-    
-    # 横方向につなげる
-    # 結合後の画像の幅を計算
-    total_width = sum(img.size[0] for img in resized_images)
-    
-    # 新しい画像を作成
-    combined_image = Image.new('RGB', (total_width, target_height))
-    
-    # 画像を横方向に配置
-    x_offset = 0
-    for img in resized_images:
-        combined_image.paste(img, (x_offset, 0))
-        x_offset += img.size[0]
-    
-    # 画像を保存
-    combined_image.save(output_path, 'JPEG', quality=95)
-    print(f"結合された画像を {output_path} に保存しました。")
-    
-    return combined_image
-
-def main() -> None:
+async def combine_images(files: List[UploadFile] = File(...)):
     """
     メイン処理
     """
-    image_folder = 'images'
-    
-    print("画像を色相順に並べています...")
-    print("（彩度が高い画素に重み付け、グレースケールは除外して最頻色を計算）")
-    
+    images = []
+    try:
+        for file in files:
+            # アップロードされたファイルをメモリ上で読み込む
+            contents = await file.read()
+            # Pillowを使って画像を開く
+            image = Image.open(io.BytesIO(contents))
+
+            # PNGなどの透過画像(RGBA)をRGBに変換して、結合エラーを防ぐ
+            if image.mode == 'RGBA':
+                image = image.convert('RGB')
+                
+            images.append(image)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"無効な画像ファイルが含まれています: {e}")
+
     # 画像を色相順にソート
-    sorted_images = sort_images_by_hue(image_folder)
+    sorted_images = sort_images_by_hue(images)
     
     if not sorted_images:
         print("処理可能な画像が見つかりませんでした。")
@@ -190,8 +152,8 @@ def main() -> None:
     num_images = len(sorted_images)
     # num_cols = 10
     # num_rows = (num_images + num_cols - 1) // num_cols  # 必要な行数を計算
-    num_cols = 20
-    num_rows = 10
+    num_cols = 10
+    num_rows = 20
     
     # 新しい画像を作成
     combined_image = Image.new('RGB', (target_width * num_cols, target_height * num_rows))
@@ -238,21 +200,16 @@ def main() -> None:
         
         combined_image.paste(resized_img, (x, y))
     
-    # 画像を保存
-    output_path = 'combined_images.jpg'
-    combined_image.save(output_path, 'JPEG', quality=95)
-    print(f"結合された画像を {output_path} に保存しました。")
+    # グリッドサイズ、セルサイズ、アスペクト比を表示
     print(f"グリッドサイズ: {num_cols}列 × {num_rows}行")
     print(f"セルサイズ: {target_width} × {target_height}")
     print(f"元画像の代表的なアスペクト比: {aspect_ratio:.2f}")
 
-    # 各画像の情報を表示
-    # print("\n色相順に並べられた画像:")
-    # for i, img_data in enumerate(sorted_images):
-    #     filename = os.path.basename(img_data['path'])
-    #     hue_degrees = img_data['hue'] * 360  # 度に変換
-    #     color = img_data['dominant_color']
-    #     print(f"{i+1:2d}. {filename} - 色相: {hue_degrees:.1f}° - 最頻色: RGB{color}")
+    # 画像を出力
+    buffered = io.BytesIO()
+    combined_image.save(buffered, format="PNG")
 
-if __name__ == "__main__":
-    main()
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    data_url = f"data:image/png;base64,{img_str}"
+    
+    return data_url
